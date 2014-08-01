@@ -10,6 +10,8 @@ The two main apps are located in the controllers/ directory:
 
 - wirledit.py - allows editing of the resource database
 
+The views/ directory holds HTML files (that use web2py's brand of markup).
+
 
 The Wirl and WirlEditor apps are built on web2py. To use this code:
 
