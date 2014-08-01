@@ -1,0 +1,96 @@
+/* CSS for the resource download program */
+
+
+/* Overrides of standard settings */
+
+body {
+	font-size: 12px;
+}
+
+.btn {
+	font-size: 12px;
+	line-height: 16px;
+}
+
+select, textarea, input[type="text"],
+input[type="password"], input[type="datetime"],input[type="datetime-local"],
+input[type="date"],input[type="month"],input[type="time"],
+input[type="week"],input[type="number"],input[type="email"],
+input[type="url"],input[type="search"],input[type="tel"],input[type="color"],
+.uneditable-input
+{
+	font-size: 12px;
+	height:    16px;
+}
+
+div.container {
+	margin-left: 10px;
+	margin-right: 0px;
+}
+
+div.flash {
+    font-weight:bold;
+    display:none;
+    position:fixed;
+    padding:10px;
+    top:50px;
+    right:250px;
+    min-width:280px;
+    opacity:0.80;
+    margin:0px 0px 10px 10px;
+    vertical-align:middle;
+    cursor:pointer;
+    color:#0099AA;
+/*    background-color:#000;  */
+    border:2px solid #fff;
+    border-radius:8px;
+    -o-border-radius: 8px;
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
+    background-image: -webkit-linear-gradient(top,#222,#000);
+    background-image: -o-linear-gradient(top,#222,#000);
+    background-image: -moz-linear-gradient(90deg, #222, #000);
+    background-image: linear-gradient(top,#222,#000);
+    background-repeat: repeat-x;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    z-index:2000;
+}
+
+/*-----------------------------*/
+
+td.err div {
+    background: red;
+    border: 1px solid #d00;
+    color: black;
+    font-weight: bold;
+    padding: 5px;
+/*    display:inline-block;  */
+    background-image: -webkit-linear-gradient(left,#ff4444,#ffdddd);
+    background-image: -o-linear-gradient(left,#ff4444,#ffdddd);
+    background-image: -moz-linear-gradient(0deg, #ff4444, #ffdddd);
+    background-image: linear-gradient(left,#ff4444,#ffdddd);
+    background-repeat: repeat-y;
+    -webkit-border-radius: 4px;
+    -moz-border-radius:    4px;
+    border-radius:         4px;
+    margin-left:  1px;
+    margin-right: 5px;
+}
+
+/* Links that look like buttons: */
+span.btn a {
+	color: black;
+}
+
+span.btn a:hover {
+	text-decoration: none;
+}
+
+
+/* experiment */
+div.flash:hover {
+	opacity: 0.50;
+	color: #00FFFF;
+}
+
