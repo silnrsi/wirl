@@ -40,13 +40,12 @@ import string
 
 def index() :
 
-    #response.flash = T("Welcome to the first LSP prototype app!")
+    #response.flash = T("Welcome to the Wirl prototype app!")
     #response.subtitle = T('Prototype')
     #return dict(message=T('Eventually you\'ll be able to download a package!'))
     
-    redirect(URL('getResource'))
-    
-    
+    redirect(URL('findResource'))
+
 def findResource() :
     
     # Read the URL arguments:
@@ -146,7 +145,7 @@ def downloadResource() :
 
 def _doDownload(recordId, record) :
        
-    tempFilePath = "./applications/lsp/temp/"
+    tempFilePath = "./applications/wirl/temp/"
     
     _cleanDirectory(tempFilePath)
 
@@ -207,7 +206,7 @@ def _extractFromZip(zipFile, subElement) :
     
     print "Extracting '" + subElement + "' from " + zipFile + "..."
     
-    tempDirPath = "./applications/lsp/temp/unzip_" + randomString
+    tempDirPath = "./applications/wirl/temp/unzip_" + randomString
     try :
         os.stat(tempDirPath)
     except :
@@ -241,7 +240,7 @@ def _extractFromZip(zipFile, subElement) :
 
 def _downloadRawData(recordId, record) :
     
-    tempFilePath = "./applications/lsp/temp/"
+    tempFilePath = "./applications/wirl/temp/"
 
     resId = record['resourceId']
     

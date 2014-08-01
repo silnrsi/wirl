@@ -19,7 +19,7 @@ response.files.insert(4,URL('static','css/downloader.css'))
 {{if len(bestRows) == 0 and len(otherRows) == 0:}}
 
 	<p>There are no resources that match your criteria.</p>
-	<p>URL format: lsp/wirl/getResource?resid=&lt;Resource ID&gt;&amp;type=&lt;Resource Type&gt;&amp;arch=&lt;Architecture&gt;</p>
+	<p>URL format: wirl/wirl/getResource?resid=&lt;Resource ID&gt;&amp;type=&lt;Resource Type&gt;&amp;arch=&lt;Architecture&gt;</p>
 	<p>Generate an {{=A("error", _href=URL("downloadResource?id=10000&raw=0")) }}</p>
 
 {{else:}}
