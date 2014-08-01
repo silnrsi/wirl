@@ -1,0 +1,275 @@
+<!-- FUNCTIONS -->
+
+{{# Generate a red error message as a cell of a table. The div is need to handle margin.}}
+{{def TD_errMsg(string):}}
+<td class="err"><div>{{=string}}</div></td>
+{{return}}
+
+{{# Generate a red error message if the sqlForm.errors contains an error.}}
+{{def TD_sqlFormErrMsg(key):}}
+{{if sqlForm.errors[key]: }}
+{{TD_errMsg(sqlForm.errors[key])}}
+{{else:}}<td></td>
+{{pass}}
+{{return}}
+
+{{# Generate a table cell that represents the current value of the record's field.}}
+{{def TD_current(rowArg, key, cssClass):}}
+<td><input class="{{=cssClass}}" id="langResource_{{=key}}" name="{{=key}}" type="text" value="{{=rowArg[key]}}" /></td>
+{{return}}
+
+{{# Generate a table cell that represents the pending value of the record's field.}}
+{{def TD_pending(pendingArg, key, cssClass):}}
+<td><input class="{{=cssClass}}" id="langResource_{{=key}}" name="{{=key}}" type="text" value="{{=pendingArg[key]}}" /></td>
+{{return}}
+
+{{# Generate an anchor tag that includes sort-key.}}
+{{def A_sort(fieldKey, string):}}
+<a href={{=URL("editor?sortby=" + fieldKey + "#scrollToItem")}}>{{=string}}</a>
+{{return}}
+
+{{# Generate a Save button for when editing a record.}}
+{{def SaveButton():}}
+<input type="submit" value="Save" style="width:52px;" class="btn" />
+{{return}}
+
+{{# Generate a Cancel button fo when editing a record.}}
+{{def CancelButton(sortbyArg, rowId):}}
+<span class="btn" style="width:40px; padding-left:5px; padding-right:5px;">
+	<a href="editor?sortby={{=sortbyArg}}&prevId={{=rowId}}#scrollToItem">Cancel</a>
+</span>
+{{return}}
+
+<!-- end of functions -->
+
+<!-- CSS files -->
+
+{{
+response.files.insert(4,URL('static','css/resedit.css'))
+}}
+
+
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+
+
+{{extend 'layout.html'}}
+
+
+<!-- old stuff
+<h4>{{=T('How did you get here?')}}</h4>
+<ol>
+  <li>{{=T('You are successfully running web2py')}}</li>
+  <li>{{=XML(T('You visited the url %s', A(request.env.path_info,_href=request.env.path_info)))}}</li>
+  <li>{{=XML(T('Which called the function %s located in the file %s',
+             (A(request.function+'()',_href='#'),
+              A('web2py/applications/%(application)s/controllers/%(controller)s.py'%request,
+               _href=URL('admin','default','peek', args=(request.application,'controllers',request.controller+'.py'))))))}}</li>
+  <li>{{=XML(T('The output of the file is a dictionary that was rendered by the view %s',
+           A('web2py/applications/%(application)s/views/%(controller)s/%(function)s.html'%request,
+           _href=URL('admin','default','peek',args=(request.application,'views',request.controller,request.function+'.html')))))}}</li>
+</ol>
+-->
+
+
+<form action="editor?sortby={{=sortby}}&id={{=idToEdit or ""}}#scrollToItem" enctype="multipart/form-data" method="post">
+
+<table>
+	
+	<tr class="header">
+		<td>{{A_sort("id", "ID")}}</td>
+		<td>Actions</td>
+		<td>{{A_sort("resourceId", "Resource ID")}}</td>
+		<td>{{A_sort("arch", "Architecture")}}</td>
+		<td>{{A_sort("archVersion", "Arch Version")}}</td>
+		<td>{{A_sort("resourceType", "Type")}}</td>
+		<td>{{A_sort("xParam", "Extra Params")}}</td>
+		<td>{{A_sort("resVersion", "Version")}}</td>
+		<td>{{A_sort("url", "URL")}}</td>
+		<td>{{A_sort("zipElement", "Zip Sub-Element")}}</td>
+		<td>{{A_sort("meta_dataType", "Data Type")}}</td>
+		<td>{{A_sort("meta_script", "Script")}}</td>
+		<td>{{A_sort("meta_other", "Other")}}</td>
+		<td>{{A_sort("meta_addedBy", "Added By")}}</td>
+	</tr>
+		
+	{{for row in rows:}}
+	
+		{{rowID = str(row.id)}}
+		{{editLink = A(IMG(_src=URL('static/images/icons', 'doc-edit.png'), _alt="Edit"),
+						_href=URL("editor?id=" + rowID + "&sortby=" + sortby + "#scrollToItem")) }}
+		{{deleteLink = A(IMG(_src=URL('static/images/icons', 'doc-delete.png'), _alt="Delete"),
+						_href=URL("deleteOne?id=" + rowID)) }}
+
+		{{if str(idToEdit) == str(row.id):}}
+			<tr class="entryTableRow">
+				{{=TD(row.id)}}
+				<td>
+					{{SaveButton()}}
+					<a id="scrollToItem" />
+				</td>
+				{{if hasErrors:}}
+					<!-- display the pending values -->
+					{{TD_pending(pending, "resourceId",		"string")}}
+					{{TD_pending(pending, "arch",			"string")}}
+					{{TD_pending(pending, "archVersion",	"string narrow")}}
+					{{TD_pending(pending, "resourceType",	"string narrow")}}
+					{{TD_pending(pending, "xParam",			"string")}}
+					{{TD_pending(pending, "resVersion",		"string narrow")}}
+					{{TD_pending(pending, "url",			"string veryWide")}}
+					{{TD_pending(pending, "zipElement",		"string slightlyWide")}}
+					{{TD_pending(pending, "meta_dataType",	"string narrow")}}
+					{{TD_pending(pending, "meta_script",	"string")}}
+					{{TD_pending(pending, "meta_other",		"string")}}
+					{{TD_pending(pending, "meta_addedBy",	"string narrow")}}
+					</tr>
+					<tr>
+						<td class="width35"></td>
+						<td>{{CancelButton(sortby, row.id)}}</td>
+						{{TD_sqlFormErrMsg("resourceId")}}
+						{{TD_sqlFormErrMsg("arch")}}
+						{{TD_sqlFormErrMsg("archVersion")}}
+						{{TD_sqlFormErrMsg("resourceType")}}
+						{{TD_sqlFormErrMsg("xParam")}}
+						{{TD_sqlFormErrMsg("resVersion")}}
+						{{TD_sqlFormErrMsg("url")}}
+						{{TD_sqlFormErrMsg("zipElement")}}
+						{{TD_sqlFormErrMsg("meta_dataType")}}
+						{{TD_sqlFormErrMsg("meta_script")}}
+						{{TD_sqlFormErrMsg("meta_other")}}
+						{{TD_sqlFormErrMsg("meta_addedBy")}}
+					</tr>
+				{{else:}}
+					<!-- display the current values -->
+					{{TD_current(row, "resourceId",		"string")}}
+					{{TD_current(row, "arch",			"string")}}
+					{{TD_current(row, "archVersion",	"string narrow")}}
+					{{TD_current(row, "resourceType",	"string")}}
+					{{TD_current(row, "xParam",			"string")}}
+					{{TD_current(row, "resVersion",		"string narrow")}}
+					{{TD_current(row, "url",			"string veryWide")}}
+					{{TD_current(row, "zipElement",		"string slightlyWide")}}
+					{{TD_current(row, "meta_dataType",	"string narrow")}}
+					{{TD_current(row, "meta_script",	"string")}}
+					{{TD_current(row, "meta_other",		"string")}}
+					{{TD_current(row, "meta_addedBy",	"string narrow")}}
+					</tr>
+					<tr><td></td><td>{{CancelButton(sortby, row.id)}}</td>
+						<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+						<td></td><td></td><td></td>
+					</tr>
+				{{pass}}
+
+		{{else:}}
+			{{isPrev = str(prevId) == str(row.id)}}
+			{{hiClass = "hilightPrev" if isPrev and hiPrev else ""}}
+			<tr>
+				<td class="{{=hiClass}}">
+					{{if isPrev:}}<a id="scrollToItem"></a>{{pass}}
+					{{=SPAN(row.id)}}
+				</td>
+				{{=TD(editLink + deleteLink, _class=hiClass)}}
+				{{=TD(row.resourceId, _class=hiClass)}}
+				{{=TD(row.arch, _class=hiClass)}}
+				{{=TD(row.archVersion, _class=hiClass)}}
+				{{=TD(row.resourceType, _class=hiClass)}}
+				{{=TD(row.xParam, _class=hiClass)}}
+				{{=TD(row.resVersion, _class=hiClass)}}
+				{{=TD(row.url, _class=hiClass)}}
+				{{=TD(row.zipElement, _class=hiClass)}}
+				{{=TD(row.meta_dataType, _class=hiClass)}}
+				{{=TD(row.meta_script, _class=hiClass)}}
+				{{=TD(row.meta_other, _class=hiClass)}}
+				{{=TD(row.meta_addedBy, _class=hiClass)}}
+		{{pass}}
+
+		</tr>
+		
+	{{pass}}
+
+	{{if idToEdit == None:}}
+		<tr id="scrollToItem" class="entryTableRow">
+			<td class="header width35">
+				{{if prevId == None:}}<a id="scrollToItem"></a>{{pass}}
+				<span>New</span>
+			</td>
+			<td></td>
+				{{TD_pending(pending, "resourceId",		"string")}}
+				{{TD_pending(pending, "arch",			"string")}}
+				{{TD_pending(pending, "archVersion",	"string narrow")}}
+				{{TD_pending(pending, "resourceType",	"string")}}
+				{{TD_pending(pending, "xParam",			"string")}}
+				{{TD_pending(pending, "resVersion",		"string narrow")}}
+				{{TD_pending(pending, "url",			"string veryWide")}}
+				{{TD_pending(pending, "zipElement",		"string slightlyWide")}}
+				{{TD_pending(pending, "meta_dataType",	"string narrow")}}
+				{{TD_pending(pending, "meta_script",	"string")}}
+				{{TD_pending(pending, "meta_other",		"string")}}
+				{{TD_pending(pending, "meta_addedBy",	"string narrow")}}
+		</tr>
+		{{if hasErrors:}}
+			<tr>
+				<td class="width35"></td>
+				<td></td>
+				{{TD_sqlFormErrMsg("resourceId")}}
+				{{TD_sqlFormErrMsg("arch")}}
+				{{TD_sqlFormErrMsg("archVersion")}}
+				{{TD_sqlFormErrMsg("resourceType")}}
+				{{TD_sqlFormErrMsg("xParam")}}
+				{{TD_sqlFormErrMsg("resVersion")}}
+				{{TD_sqlFormErrMsg("url")}}
+				{{TD_sqlFormErrMsg("zipElement")}}
+				{{TD_sqlFormErrMsg("meta_dataType")}}
+				{{TD_sqlFormErrMsg("meta_script")}}
+				{{TD_sqlFormErrMsg("meta_other")}}
+				{{TD_sqlFormErrMsg("meta_addedBy")}}
+			</tr>
+		{{pass}}
+	{{pass}}
+
+</table>
+
+{{if idToEdit == None:}}
+	<input type="submit" value="Add Resource" class="btn" />
+	<div style="display:none">
+		<input name="_formkey" type="hidden" value="{{=fkey}}" />
+		<input name="_formname" type="hidden" value="langResource/create" />
+	</div>
+{{else:}}
+	<div style="display:none">
+		<input name="id" type="hidden" value="{{=idToEdit}}" />
+		<input name="_formkey" type="hidden" value="{{=fkey}}" />
+		<input name="_formname" type="hidden" value="langResource/{{=idToEdit}}" />
+	</div>
+{{pass}}
+
+</form>
+
+
+<p>---------------------------------------------------</p>
+
+<!--
+
+{{if 'message' in globals():}}
+
+<h4>{{=message}}</h4>
+
+
+{{=sqlForm}}
+
+
+{{elif 'content' in globals():}}
+{{=content}}
+{{else:}}
+{{=BEAUTIFY(response._vars)}}
+{{pass}}
+
+-->
+
+{{=response.toolbar()}}
+
+
+
+{{block right_sidebar}}
+{{end}}
+
+

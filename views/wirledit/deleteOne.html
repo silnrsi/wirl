@@ -1,0 +1,40 @@
+{{
+response.files.insert(4,URL('static','css/editor.css'))
+}}
+
+
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+
+
+{{extend 'layout.html'}}
+
+<p>Are you sure you want to delete the following resource?</p>
+
+<table>
+	<tr><td>Resource ID</td>{{=TD(row.resourceId)}}</tr>
+	<tr><td>Architecture</td>{{=TD(row.arch)}}</tr>
+	<tr><td>Resource Type</td>{{=TD(row.resourceType)}}</tr>
+	<tr><td>Extra Param</td>{{=TD(row.xParam)}}</tr>
+</table>
+
+{{=A("Delete", _href=URL("deleteOneConfirmed", vars=dict(id=row.id)), _class="btn") }}
+
+
+<!--
+{{if 'message' in globals():}}
+<h4>{{=message}}</h4>
+
+
+{{=sqlForm}}
+
+
+{{elif 'content' in globals():}}
+{{=content}}
+{{else:}}
+{{=BEAUTIFY(response._vars)}}
+{{pass}}
+-->
+
+{{block right_sidebar}}
+{{end}}
+

@@ -1,0 +1,37 @@
+<!-- FUNCTIONS -->
+
+
+<!-- end of functions -->
+
+<!-- CSS files -->
+
+{{
+response.files.insert(4,URL('static','css/downloader.css'))
+}}
+
+
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+
+
+{{extend 'layout.html'}}
+
+
+{{if urlopenError:}}
+<p>There was an error in downloading the file: <span style="font-weight:bold; color:red;">{{=urlopenError}}</span></p>
+
+{{else:}}
+<p>I have no idea why we've come to this page.</p>
+
+{{pass}}
+
+<p>---------------------------------------------------</p>
+
+
+{{=response.toolbar()}}
+
+
+
+{{block right_sidebar}}
+{{end}}
+
+

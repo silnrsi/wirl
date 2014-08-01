@@ -1,0 +1,108 @@
+<!-- FUNCTIONS -->
+
+
+<!-- end of functions -->
+
+<!-- CSS files -->
+
+{{
+response.files.insert(4,URL('static','css/downloader.css'))
+}}
+
+
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+
+
+{{extend 'layout.html'}}
+
+
+{{if len(bestRows) == 0 and len(otherRows) == 0:}}
+
+	<p>There are no resources that match your criteria.</p>
+	<p>URL format: lsp/wirl/getResource?resid=&lt;Resource ID&gt;&amp;type=&lt;Resource Type&gt;&amp;arch=&lt;Architecture&gt;</p>
+	<p>Generate an {{=A("error", _href=URL("downloadResource?id=10000&raw=0")) }}</p>
+
+{{else:}}
+
+	{{if len(bestRows) > 0:}}
+
+	<p>The following are resources that match your criteria:</p>
+
+	<table>
+		<tr style="font-weight:bold">
+			<td>Name</td><td>File Type</td><td>Architecture</td><td>Download</td><td>Raw Text</td><td>Redirect</td>
+		</tr>
+		
+		{{for row in bestRows:}}
+	
+			<tr>
+				{{rowID = str(row.id)}}
+				{{=TD(row.resourceId)}}
+				{{=TD(row.resourceType)}}
+				<td>
+					{{=row.arch}}
+					{{if row.archVersion and row.archVersion != "":}}
+						({{=row.archVersion}})
+					{{pass}}
+				</td>
+				{{=TD(A(IMG(_src=URL('static/images/icons', 'doc-download.png'), _alt="Download"),
+							_href=URL("downloadResource?id=" + rowID + "&raw=0"))) }}
+				{{=TD(A(IMG(_src=URL('static/images/icons', 'doc-download.png'), _alt="Raw Text"),
+							_href=URL("downloadResource?id=" + rowID + "&raw=1"))) }}
+				{{=TD(A(IMG(_src=URL('static/images/icons', 'doc-download.png'), _alt="Redirect"),
+							_href=URL("downloadResource?id=" + rowID + "&redirect=1"))) }}
+			</tr>
+		
+		{{pass}}
+
+	</table>
+
+	{{pass}}
+
+	{{if len(otherRows) > 0:}}
+
+	<p>These resources do not exactly fit your criteria but they may be of interest:</p>
+
+	<table>
+		<tr style="font-weight:bold">
+			<td>Name</td><td>File Type</td><td>Architecture</td><td>Download</td><td>Raw Text</td>
+		</tr>
+		
+		{{for row in otherRows:}}
+	
+			<tr>
+				{{rowID = str(row.id)}}
+				{{=TD(row.resourceId)}}
+				{{=TD(row.resourceType)}}
+				<td>
+					{{=row.arch}}
+					{{if row.archVersion and row.archVersion != "":}}
+						({{=row.archVersion}})
+					{{pass}}
+				</td>
+				{{=TD(A(IMG(_src=URL('static/images/icons', 'doc-download.png'), _alt="Download"),
+							_href=URL("downloadResource?id=" + rowID))) }}
+				{{=TD(A(IMG(_src=URL('static/images/icons', 'doc-download.png'), _alt="Raw Text"),
+							_href=URL("downloadResource?id=" + rowID + "&raw=1"))) }}
+			</tr>
+		
+		{{pass}}
+
+	</table>
+
+	{{pass}}
+
+
+{{pass}}
+
+<p>---------------------------------------------------</p>
+
+
+{{=response.toolbar()}}
+
+
+
+{{block right_sidebar}}
+{{end}}
+
+
